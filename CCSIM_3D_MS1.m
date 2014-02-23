@@ -40,15 +40,15 @@ LOC2 = NaN(a*b*c,2);
 index1 = reshape(1:size(TI,1)*size(TI,2)*size(TI,3),size(TI,1),size(TI,2),size(TI,3));
 
 
-for i=1:T(1)-OL(1):sizeout(1)-T(1)+1,
-  for j=1:T(2)-OL(2):sizeout(2)-T(2)+1,
-      for k=1:T(3)-OL(3):sizeout(3)-T(3)+1,
+for i=[1:T(1)-OL(1):sizeout(1)-T(1), sizeout(1)-T(1)+1],
+  for j=[1:T(2)-OL(2):sizeout(2)-T(2), sizeout(2)-T(2)+1],
+      for k=[1:T(3)-OL(3):sizeout(3)-T(3), sizeout(3)-T(3)+1],
           
           cntr = cntr+1;
-          hd_dev=hd(i:i+T(1)-1,j:j+T(2)-1,k:k+T(3)-1);
-          hd_dev=hd_dev(:);
-          hd_indicator=sum(isfinite(hd_dev));
-          hd_index=find(~isnan(hd_dev));
+          hd_dev = hd(i:i+T(1)-1,j:j+T(2)-1,k:k+T(3)-1);
+          hd_dev = hd_dev(:);
+          hd_indicator = sum(isfinite(hd_dev));
+          hd_index = find(~isnan(hd_dev));
      
      
           LOC1_x = 2*LOC1(cntr,1)-1; LOC1_y = 2*LOC1(cntr,2)-1; LOC1_z = LOC1(cntr,3);
@@ -415,7 +415,7 @@ for i=1:T(1)-OL(1):sizeout(1)-T(1)+1,
                       end;
                   end;
                   index_intrst = index_section(x,y,z);
-                  [xx,yy]=ind2sub(size(TI),index_intrst);             
+                  [xx,yy,zz]=ind2sub(size(TI),index_intrst);             
                   LOC2 (cntr,1)=xx; LOC2 (cntr,2)=yy; LOC2 (cntr,3)=zz;
               end;
           end;

@@ -14,7 +14,7 @@
 
 
 
-function [Grid_Sim, LOC] = CCSIM_3D_MS2(TI, hd, T, OL, CT, fc, prop, cand)
+function [Grid_Sim, LOC] = hd_sp_3D_MS(TI, hd, T, OL, CT, fc, prop, cand, i, j, k, grid)
 
 
 %% Input Parameters
@@ -31,11 +31,19 @@ function [Grid_Sim, LOC] = CCSIM_3D_MS2(TI, hd, T, OL, CT, fc, prop, cand)
 % - Grid_Sim: Simulation grid for output
 
 %% ---------------------------------------------------------------------------------------- 
-sizeout = size(hd);
-Grid_Sim = NaN(sizeout);
+sizeout_orig = size(hd);
 
-% TI2 = TI(1:end-T(1),1:end-T(2),1:end-T(3));
-TI2 = TI;
+sizeout(1) = sizeout_orig(1) + 2*(T(1));
+sizeout(2) = sizeout_orig(2) + 2*(T(2));
+sizeout(3) = sizeout_orig(3) + 2*(T(3));
+
+HD = NaN(sizeout(1),sizeout(2),sizeout(3));
+HD_temp = HD; HD_temp(1:size(hd,1),1:size(hd,2),1:size(hd,3)) = hd; hd = HD_temp;
+
+
+Grid_Sim = grid;
+
+TI2 = TI(1:end-T(1),1:end-T(2),1:end-T(3));
 
 
 temp = ones(T(1),T(2), OL(3));
@@ -66,10 +74,7 @@ b = numel(1:T(2)-OL(2):sizeout(2)-T(2)+1);
 c = numel(1:T(3)-OL(3):sizeout(3)-T(3)+1);
 LOC = NaN(a*b*c,2);
 
-tic;
-for i=[1:T(1)-OL(1):sizeout(1)-T(1), sizeout(1)-T(1)+1],
-  for j=[1:T(2)-OL(2):sizeout(2)-T(2), sizeout(2)-T(2)+1],
-      for k=[1:T(3)-OL(3):sizeout(3)-T(3), sizeout(3)-T(3)+1],
+
           
           cntr = cntr+1;
           
@@ -177,8 +182,8 @@ for i=[1:T(1)-OL(1):sizeout(1)-T(1), sizeout(1)-T(1)+1],
               X_final = pos(1); Y_final = pos(2); Z_final = pos(3);
           else
               [~, loc] = sort(CC(:));
-              loc = loc(1:cand,1);
-              [loc(:,2),loc(:,3),loc(:,4)] = ind2sub(size(CC),loc(1:cand,1));
+%               loc = loc(1:cand,1);
+              [loc(:,2),loc(:,3),loc(:,4)] = ind2sub(size(CC),loc(:,1));
               now=0; difh=1E+5; difH=1E+5; DifT=1E+5;
               while (DifT~=0) && (now+1<=ceil(prop*size(loc,1))),
                   now = now+1;
@@ -225,6 +230,3 @@ for i=[1:T(1)-OL(1):sizeout(1)-T(1), sizeout(1)-T(1)+1],
           
           Grid_Sim(i:i+T(1)-1, j:j+T(2)-1, k:k+T(3)-1) = combine(dev_init,Target,M);
       
-      end;
-  end;
-end;

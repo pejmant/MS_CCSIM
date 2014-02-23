@@ -32,8 +32,8 @@ b = numel(1:T-OL:Grid_Sim(2)-T+1);
 LOC = NaN(a*b,2);
 
 
-for i=1:T-OL:sizeout(1)-T+1,
-  for j=1:T-OL:sizeout(2)-T+1,
+for i=[1:T-OL:sizeout(1)-T, sizeout(1)-T+1],
+  for j=[1:T-OL:sizeout(2)-T, sizeout(2)-T+1],
       
       cntr = cntr+1;
       
